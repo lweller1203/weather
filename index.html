@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/f4285c522e.js" crossorigin="anonymous"></script>
+    <title>Weather Dashboard</title>
+</head>
+
+<body style="background-color: #2e2d2e; ">
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="#">
+            <i class="fas fa-bolt"></i>
+            Weather Dashboard
+        </a>
+    </nav>
+    </br>
+    <div id="container" class="col-10 offset-1" style="border-radius: 40px; background-color: white; padding: 20px;">
+
+
+
+
+    <div id="searchContainer" style="text-align: center;">
+        <h2>See what the weather is!</h2>
+        </br>
+        <span>Search for a city: </span>
+        <input id="searchCity"></input>
+        <button id="submitButton">Submit</button>
+    </div>
+    </br>
+    <div id="weatherInfoContainer" style="text-align: center;">
+        <div class="city"></div>
+        <div class="currentDate"></div>
+        <div class="temp"></div>
+        <div class="humidity"></div>
+        <div class="wind"></div>
+        <div class="uvIndex"></div>
+        
+        
+    </div>
+</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        
+        var APIKey = "166a433c57516f51dfab1f7edaed8413";
+
+        
+        
+        
+        $("#submitButton").click(function(){
+            var today = new Date();
+            var date = (today.getMonth()+1)+'/'+today.getDate()+'/'+today.getFullYear();
+            var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        
+        var queryURL = "https://api.openweathermap.org/data/2.5/weather?" +
+            "q="+$("#searchCity").val()+"&units=imperial&appid=" + APIKey;
+
+        
+        
+            
+            
+
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+        })
+            
+            .then(function (response) {
+
+                // Log the queryURL
+                console.log(queryURL);
+
+                // Log the resulting object
+                console.log(response);
+
+                // Transfer content to HTML
+                $(".city").html("<h1>" + response.name + " Weather Details</h1>");
+                $(".currentDate").text("Time of report: " + time + " on " + date)
+                $(".temp").text("Temperature (F) " + response.main.temp);
+                $(".humidity").text("Humidity: " + response.main.humidity);
+                $(".wind").text("Wind Speed: " + response.wind.speed);
+                $(".uvIndex").text("UV Index: " + response.weather.uvi)
+                ///$(".uvIndex").text("UV Index: " + response.weather[0].main);
+
+
+               
+                
+
+                // Converts the temp to Kelvin with the below formula
+                var tempF = (response.main.temp - 273.15) * 1.80 + 32;
+                $(".tempF").text("Temperature (Kelvin) " + tempF);
+
+                // Log the data in the console as well
+                console.log("Wind Speed: " + response.wind.speed);
+                console.log("Humidity: " + response.main.humidity);
+                console.log("Temperature (F): " + response.main.temp);
+            });
+
+        })
+    </script>
+</body>
+
+</html>
